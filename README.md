@@ -35,3 +35,5 @@ npm start
 - [sqlite3](https://www.npmjs.com/package/sqlite3)
 - [reflect-metadata](https://www.npmjs.com/package/reflect-metadata)
 - [prettier](https://www.npmjs.com/package/prettier)
+- [ejs](https://www.npmjs.com/package/ejs)
+- [express-ejs-layouts](https://www.npmjs.com/package/express-ejs-layouts)
