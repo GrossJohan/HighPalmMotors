@@ -4,6 +4,7 @@ import expressEjsLayouts from 'express-ejs-layouts';
 import path from 'path';
 import pageRouter from './routes/Page';
 import userRouter from './routes/User';
+import sessionRoute from './routes/Session';
 
 const app = express();
 
@@ -12,7 +13,6 @@ app.use(express.json());
 
 // Static files
 app.use(express.static(path.join(__dirname, '../public')));
-// app.use('/js', express.static(path.join(__dirname, '../public')));
 
 // Template engine
 app.use(expressEjsLayouts);
@@ -22,5 +22,6 @@ app.set('view engine', 'ejs');
 
 app.use('/', pageRouter);
 app.use('/users', userRouter);
+app.use('/sessions', sessionRoute);
 
 export default app;

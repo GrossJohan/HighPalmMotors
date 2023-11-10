@@ -10,27 +10,19 @@ function toggleMenu() {
   }
 }
 
-function openModal() {
-  const modal = document.getElementById('myModal');
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
   modal.style.display = 'flex';
 }
 
-function closeModal() {
-  const modal = document.getElementById('myModal');
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
   modal.style.display = 'none';
   document.getElementById('signUpEmail').value = '';
   document.getElementById('signUpPassword').value = '';
+  document.getElementById('signInEmail').value = '';
+  document.getElementById('signInPassword').value = '';
 }
-
-// Close the modal if the user clicks outside of it
-window.onclick = function (event) {
-  const modal = document.getElementById('myModal');
-  if (event.target === modal) {
-    modal.style.display = 'none';
-    document.getElementById('signUpEmail').value = '';
-    document.getElementById('signUpPassword').value = '';
-  }
-};
 
 function signUp() {
   event.preventDefault();
@@ -51,20 +43,96 @@ function signUp() {
   send('POST', '/users', { email, password }).then((response) => {
     if (response.ok) {
       alert('Sign up successful!');
+
       // Clear form
       emailInput.value = '';
       passwordInput.value = '';
 
       // Close modal
-      closeModal();
+      closeModal('signUpModal');
 
       // Redirect to /home
-      window.location.href = '/home#start_here';
+      window.location.href = '/home';
     } else {
-      alert(`Failed to sign up: ${response.body.error || 'Unknown error'}`);
+      alert('Failed to sign up!');
     }
   });
 }
+
+function signIn() {
+  event.preventDefault();
+
+  const emailInput = document.getElementById('signInEmail');
+  const passwordInput = document.getElementById('signInPassword');
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  // Validate email and password
+  const validationError = validateForm(email, password);
+
+  if (validationError) {
+    return alert(validationError);
+  }
+
+  // Send a POST request to /sessions
+  send('POST', '/sessions', { email, password }).then((response) => {
+    if (response.ok) {
+      // Save session id to local storage
+      const sessionIdString = response.body.id;
+
+      localStorage.setItem('sessionId', sessionIdString);
+      sessionId = sessionIdString;
+
+      // Clear form
+      emailInput.value = '';
+      passwordInput.value = '';
+
+      // Close modal
+      closeModal('signInModal');
+
+      // Hide sign in button
+      document.getElementById('signInButton').style.display = 'none';
+      document.getElementById('signOutButton').style.display = 'block';
+
+      // Redirect to /home
+      window.location.href = '/home';
+    } else {
+      alert('Failed to sign in!');
+    }
+  });
+}
+
+function signOut() {
+  // Send a DELETE request to /sessions
+  send('DELETE', '/sessions').then((response) => {
+    if (response.ok) {
+      // Clear local storage
+      clearStorageAndResetSessionInfo();
+
+      // Show sign in button
+      document.getElementById('signInButton').style.display = 'block';
+      document.getElementById('signOutButton').style.display = 'none';
+
+      // Redirect to /home
+      window.location.href = '/home';
+    } else {
+      alert('Failed to sign out!');
+    }
+  });
+}
+
+// On page load or refresh, check if there is a session id in local storage
+window.onload = function () {
+  const session = localStorage.getItem('sessionId');
+  if (session) {
+    sessionId = session;
+    document.getElementById('signInButton').style.display = 'none';
+    document.getElementById('signOutButton').style.display = 'block';
+  } else {
+    document.getElementById('signInButton').style.display = 'block';
+    document.getElementById('signOutButton').style.display = 'none';
+  }
+};
 
 function validateForm(email, password) {
   if (!email.trim() || !password.trim()) {

@@ -38,3 +38,4 @@ npm start
 - [ejs](https://www.npmjs.com/package/ejs)
 - [express-ejs-layouts](https://www.npmjs.com/package/express-ejs-layouts)
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
+- [uuid](https://www.npmjs.com/package/uuid)
