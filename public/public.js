@@ -1,29 +1,6 @@
 let sessionId = null;
 
-function toggleMenu() {
-  const menu = document.getElementById('mobile-menu');
-  // var menu = document.getElementById("header-navbar");
-  if (menu.style.display === 'none') {
-    menu.style.display = 'block';
-  } else {
-    menu.style.display = 'none';
-  }
-}
-
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-  modal.style.display = 'flex';
-}
-
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  modal.style.display = 'none';
-  document.getElementById('signUpEmail').value = '';
-  document.getElementById('signUpPassword').value = '';
-  document.getElementById('signInEmail').value = '';
-  document.getElementById('signInPassword').value = '';
-}
-
+// Send request
 function signUp() {
   event.preventDefault();
 
@@ -121,6 +98,52 @@ function signOut() {
   });
 }
 
+function submitVehicleForm() {
+  event.preventDefault();
+
+  let year = document.getElementById('year').value.trim();
+  let make = document.getElementById('make').value.trim();
+  let model = document.getElementById('model').value.trim();
+  let vin = document.getElementById('vin').value.trim();
+
+  // Validate vehicle form
+  const validationError = validateVehicleForm(year, make, model, vin);
+
+  if (validationError) {
+    return alert(validationError);
+  }
+
+  // Send a POST request to /users
+  send('POST', '/vehicles', { year, make, model, vin }).then((response) => {
+    if (response.ok) {
+      alert('Vehicle information submitted!');
+
+      // Clear form
+      document.getElementById('year').value = '';
+      document.getElementById('make').value = '';
+      document.getElementById('model').value = '';
+      document.getElementById('vin').value = '';
+    } else {
+      alert('Failed to submit vehicle information!');
+    }
+  });
+}
+
+// Modal
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = 'flex';
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = 'none';
+  document.getElementById('signUpEmail').value = '';
+  document.getElementById('signUpPassword').value = '';
+  document.getElementById('signInEmail').value = '';
+  document.getElementById('signInPassword').value = '';
+}
+
 // On page load or refresh, check if there is a session id in local storage
 window.onload = function () {
   const session = localStorage.getItem('sessionId');
@@ -134,6 +157,7 @@ window.onload = function () {
   }
 };
 
+// Validation
 function validateForm(email, password) {
   if (!email.trim() || !password.trim()) {
     return 'Email and password are required';
@@ -144,6 +168,35 @@ function validateForm(email, password) {
   }
 
   return null;
+}
+
+function validateVehicleForm(year, make, model, vin) {
+  if (!year.trim() || !make.trim() || !model.trim() || !vin.trim()) {
+    return 'All fields are required';
+  }
+
+  let currentYear = new Date().getFullYear();
+
+  if (year < 1900 || year > currentYear) {
+    return `Year must be between 1900 and ${currentYear}`;
+  }
+
+  if (vin.length !== 17) {
+    return 'VIN must be 17 characters';
+  }
+
+  return null;
+}
+
+// Other
+function toggleMenu() {
+  const menu = document.getElementById('mobile-menu');
+  // var menu = document.getElementById("header-navbar");
+  if (menu.style.display === 'none') {
+    menu.style.display = 'block';
+  } else {
+    menu.style.display = 'none';
+  }
 }
 
 function tryToParseJSON(jsonString) {

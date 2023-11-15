@@ -1,4 +1,5 @@
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Vehicle } from './Vehicle';
 
 @Entity()
 export class User extends BaseEntity {
@@ -10,6 +11,9 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 50 })
   email: string;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
+  vehicles: Vehicle[];
 
   @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

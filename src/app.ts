@@ -4,7 +4,8 @@ import expressEjsLayouts from 'express-ejs-layouts';
 import path from 'path';
 import pageRouter from './routes/Page';
 import userRouter from './routes/User';
-import sessionRoute from './routes/Session';
+import sessionRouter from './routes/Session';
+import vehicleRouter from './routes/Vehicle';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.set('view engine', 'ejs');
 
 app.use('/', pageRouter);
 app.use('/users', userRouter);
-app.use('/sessions', sessionRoute);
+app.use('/sessions', sessionRouter);
+app.use('/vehicles', vehicleRouter);
 
 export default app;

@@ -9,22 +9,22 @@
             <form class="horizontal-form">
                 <div class="form_row">
                     <label class="form_label" for="vin">VIN</label><br>
-                    <input class="form_input" type="text" id="vin" name="input1">
+                    <input class="form_input" type="number" pattern="\d+" id="vin" name="vin" required>
                 </div>
                 <div class="form_row">
                     <label class="form_label" for="make">MAKE</label><br>
-                    <input class="form_input" type="text" id="make" name="input2">
+                    <input class="form_input" type="text" id="make" name="make" required>
                 </div>
                 <div class="form_row">
                     <label class="form_label" for="model">MODEL</label><br>
-                    <input class="form_input" type="text" id="model" name="input3">
+                    <input class="form_input" type="text" id="model" name="model" required>
                 </div>
                 <div class="form_row">
                     <label class="form_label" for="year">YEAR</label><br>
-                    <input class="form_input" type="text" id="year" name="input4">
+                    <input class="form_input" type="number" pattern="\d+" id="year" name="year" required>
                 </div>
             </form>
-            <input type="submit" value="CONTINUE">
+            <input type="submit" value="CONTINUE" onclick='submitVehicleForm()'>
         </div>
     </div>
 </div>
