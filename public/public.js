@@ -1,4 +1,5 @@
 let sessionId = null;
+let adminSessionId = null;
 
 // Send request
 function signUp() {
@@ -79,6 +80,42 @@ function signIn() {
   });
 }
 
+function adminSignIn() {
+  event.preventDefault();
+
+  const emailInput = document.getElementById('adminSignInEmail');
+  const passwordInput = document.getElementById('adminSignInPassword');
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  // Validate email and password
+  const validationError = validateForm(email, password);
+
+  if (validationError) {
+    return alert(validationError);
+  }
+
+  // Send a POST request to /sessions
+  send('POST', '/admin', { email, password }).then((response) => {
+    if (response.ok) {
+      document.querySelector('.admin').style.display = 'none';
+      document.querySelector('.admin-dashboard').style.display = 'block';
+
+      // Save session id to local storage
+      const sessionIdString = response.body.id;
+
+      localStorage.setItem('adminSessionId', sessionIdString);
+      adminSessionId = sessionIdString;
+
+      // Clear form
+      emailInput.value = '';
+      passwordInput.value = '';
+    } else {
+      alert('Failed to sign in!');
+    }
+  });
+}
+
 function signOut() {
   // Send a DELETE request to /sessions
   send('DELETE', '/sessions').then((response) => {
@@ -147,6 +184,7 @@ function closeModal(modalId) {
 // On page load or refresh, check if there is a session id in local storage
 window.onload = function () {
   const session = localStorage.getItem('sessionId');
+  const adminSession = localStorage.getItem('adminSessionId');
   if (session) {
     sessionId = session;
     document.getElementById('signInButton').style.display = 'none';
@@ -154,6 +192,15 @@ window.onload = function () {
   } else {
     document.getElementById('signInButton').style.display = 'block';
     document.getElementById('signOutButton').style.display = 'none';
+  }
+
+  if (adminSession) {
+    adminSessionId = adminSession;
+    document.querySelector('.admin').style.display = 'none';
+    document.querySelector('.admin-dashboard').style.display = 'block';
+  } else {
+    document.querySelector('.admin').style.display = 'block';
+    document.querySelector('.admin-dashboard').style.display = 'none';
   }
 };
 
@@ -254,5 +301,7 @@ function send(method, url, body) {
 
 function clearStorageAndResetSessionInfo() {
   localStorage.removeItem('sessionId');
+  localStorage.removeItem('adminSessionId');
   sessionId = null;
+  adminSessionId = null;
 }

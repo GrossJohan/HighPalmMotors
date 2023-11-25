@@ -6,6 +6,7 @@ import pageRouter from './routes/Page';
 import userRouter from './routes/User';
 import sessionRouter from './routes/Session';
 import vehicleRouter from './routes/Vehicle';
+import adminRouter from './routes/Admin';
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/', pageRouter);
 app.use('/users', userRouter);
 app.use('/sessions', sessionRouter);
 app.use('/vehicles', vehicleRouter);
+app.use('/admin', adminRouter);
 
 export default app;

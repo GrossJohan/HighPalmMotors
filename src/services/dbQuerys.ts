@@ -17,3 +17,8 @@ export const dbCreateEntity = async (entityType, params) => {
 
   return entity;
 };
+
+// get all entities with a relationship
+export const dbGetAllEntities = async (entityType, relations) => {
+  return await AppDataSource.getRepository(entityType).find({ relations });
+};

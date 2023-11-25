@@ -1,3 +1,5 @@
+import { dbGetAllEntities } from '../services/dbQuerys';
+
 export const servePage = async (req, res) => {
   if (req.params['page'] === 'home' || !req.params['page']) {
     res.render('home');
@@ -7,6 +9,10 @@ export const servePage = async (req, res) => {
     res.render('howItWorks');
   } else if (req.params['page'] === 'contactUs') {
     res.render('contactUs');
+  } else if (req.params['page'] === 'admin') {
+    // Get all vehicles
+    const vehicles = await dbGetAllEntities('Vehicle', ['user']);
+    res.render('admin', { vehicles });
   } else {
     res.render('404');
   }

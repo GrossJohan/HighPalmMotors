@@ -1,0 +1,52 @@
+<!-- Admin Sign In container -->
+<div id="adminSignIn" class="admin">
+    <div class="form_box eight wide column">
+        <h2 class='form_label'>Sign in to access admin dashboard</h2>
+
+        <form class='signup_form'>
+            <label class='form_label' for='adminSignInEmail'>Email</label>
+            <br>
+            <input class='form_input' type='email' id='adminSignInEmail' required>
+            <br><br>
+            <label class='form_label' for='adminSignInPassword'>Password</label>
+            <br>
+            <input class='form_input' type='password' id='adminSignInPassword' required>
+            <br><br>
+            <input type='submit' value='Sign In' onclick='adminSignIn()'>
+        </form>
+    </div>
+</div>
+
+<!-- Admin vehicle list -->
+<div class='admin-dashboard'>
+    <h2>Vehicle List</h2>
+    <table class='admin-table'>
+        <thead>
+        <tr>
+            <th class='admin-th'>Vehicle ID</th>
+            <th class='admin-th'>VIN</th>
+            <th class='admin-th'>Year</th>
+            <th class='admin-th'>Make</th>
+            <th class='admin-th'>Model</th>
+            <th class='admin-th'>User ID</th>
+            <th class='admin-th'>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% vehicles.forEach(vehicle => { %>
+            <tr>
+                <td class='admin-td'><%= vehicle.id %></td>
+                <td class='admin-td'><%= vehicle.vin %></td>
+                <td class='admin-td'><%= vehicle.year %></td>
+                <td class='admin-td'><%= vehicle.make %></td>
+                <td class='admin-td'><%= vehicle.model %></td>
+                <td class='admin-td'><%= vehicle.user.id %></td>
+                <td class="admin-td price-cell">
+                    <input type="number" class="price-input" placeholder="Enter Price" required>
+                    <button type="button">Submit</button>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>

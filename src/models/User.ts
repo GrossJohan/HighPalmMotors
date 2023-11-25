@@ -12,6 +12,9 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 50 })
   email: string;
 
+  @Column({ type: 'boolean', default: false })
+  isAdmin: boolean;
+
   @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
   vehicles: Vehicle[];
 
