@@ -39,3 +39,4 @@ npm start
 - [express-ejs-layouts](https://www.npmjs.com/package/express-ejs-layouts)
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [uuid](https://www.npmjs.com/package/uuid)
+- [nodemailer](https://www.npmjs.com/package/nodemailer)

@@ -1,3 +1,5 @@
+import { Offer } from './models/Offer';
+
 require('dotenv').config();
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
@@ -9,7 +11,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: false,
-  entities: [User, Vehicle],
+  entities: [User, Vehicle, Offer],
   migrations: [],
   subscribers: [],
 });

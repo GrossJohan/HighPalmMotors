@@ -22,7 +22,7 @@ export const createUser = async (req, res) => {
       return res.status(400).send('Email must be in a valid format!');
     }
 
-    const userExists = await dbFindByFieldName(User, 'email', email);
+    const userExists = await dbFindByFieldName('User', 'email', email);
 
     if (userExists) {
       return res.status(400).send('Email already exists!');

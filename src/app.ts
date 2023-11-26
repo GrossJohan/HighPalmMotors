@@ -7,6 +7,7 @@ import userRouter from './routes/User';
 import sessionRouter from './routes/Session';
 import vehicleRouter from './routes/Vehicle';
 import adminRouter from './routes/Admin';
+import emailRouter from './routes/Email';
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.use('/users', userRouter);
 app.use('/sessions', sessionRouter);
 app.use('/vehicles', vehicleRouter);
 app.use('/admin', adminRouter);
+app.use('/email', emailRouter);
 
 export default app;

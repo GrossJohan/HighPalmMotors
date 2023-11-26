@@ -11,7 +11,7 @@ export const servePage = async (req, res) => {
     res.render('contactUs');
   } else if (req.params['page'] === 'admin') {
     // Get all vehicles
-    const vehicles = await dbGetAllEntities('Vehicle', ['user']);
+    const vehicles = await dbGetAllEntities('Vehicle', ['user', 'offer']);
     res.render('admin', { vehicles });
   } else {
     res.render('404');

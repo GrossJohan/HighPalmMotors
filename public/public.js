@@ -135,6 +135,27 @@ function signOut() {
   });
 }
 
+function submitPrice(vehicle) {
+  const priceInput = document.getElementById(`price${vehicle.id}`);
+  let price = priceInput.value;
+
+  send('POST', '/email', { vehicle, price }).then((response) => {
+    if (response.ok) {
+      alert('Email sent!');
+
+      // Clear form
+      priceInput.value = '';
+
+      document.getElementById(`offer${vehicle.id}`).innerHTML = `${response.body.data}: ($${price})`;
+    } else {
+      alert('Failed to send email!');
+
+      // Clear form
+      priceInput.value = '';
+    }
+  });
+}
+
 function submitVehicleForm() {
   event.preventDefault();
 

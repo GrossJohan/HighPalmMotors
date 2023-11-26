@@ -1,5 +1,6 @@
 import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne } from 'typeorm';
 import { User } from './User';
+import { Offer } from './Offer';
 
 @Entity()
 export class Vehicle extends BaseEntity {
@@ -27,4 +28,8 @@ export class Vehicle extends BaseEntity {
 
   @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
+
+  @ManyToOne(() => Offer, (offer) => offer.vehicle)
+  @JoinColumn({ name: 'offerId' })
+  offer: Offer;
 }

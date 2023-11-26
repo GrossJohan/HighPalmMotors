@@ -29,7 +29,8 @@
             <th class='admin-th'>Make</th>
             <th class='admin-th'>Model</th>
             <th class='admin-th'>User ID</th>
-            <th class='admin-th'>Price</th>
+            <th class='admin-th'>Offer ID</th>
+            <th class='admin-th'>Offer</th>
         </tr>
         </thead>
         <tbody>
@@ -41,9 +42,12 @@
                 <td class='admin-td'><%= vehicle.make %></td>
                 <td class='admin-td'><%= vehicle.model %></td>
                 <td class='admin-td'><%= vehicle.user.id %></td>
+
+                <td class='admin-td' id="offer<%= vehicle.id %>"><%= vehicle.offer ? `${vehicle.offer.id}: ($${vehicle.offer.price})` : 'N/A' %></td>
+
                 <td class="admin-td price-cell">
-                    <input type="number" class="price-input" placeholder="Enter Price" required>
-                    <button type="button">Submit</button>
+                    <input type="number" id="price<%= vehicle.id %>" class="price-input" placeholder="Enter Price" required>
+                    <button type="button" onclick="submitPrice(<%= JSON.stringify(vehicle) %>)">Submit</button>
                 </td>
             </tr>
         <% }); %>
