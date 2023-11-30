@@ -1,85 +1,6 @@
-let sessionId = null;
 let adminSessionId = null;
 
 // Send request
-function signUp() {
-  event.preventDefault();
-
-  const emailInput = document.getElementById('signUpEmail');
-  const passwordInput = document.getElementById('signUpPassword');
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  // Validate email and password
-  const validationError = validateForm(email, password);
-
-  if (validationError) {
-    return alert(validationError);
-  }
-
-  // Send a POST request to /users
-  send('POST', '/users', { email, password }).then((response) => {
-    if (response.ok) {
-      alert('Sign up successful!');
-
-      // Clear form
-      emailInput.value = '';
-      passwordInput.value = '';
-
-      // Close modal
-      closeModal('signUpModal');
-
-      // Redirect to /home
-      window.location.href = '/home';
-    } else {
-      alert('Failed to sign up!');
-    }
-  });
-}
-
-function signIn() {
-  event.preventDefault();
-
-  const emailInput = document.getElementById('signInEmail');
-  const passwordInput = document.getElementById('signInPassword');
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  // Validate email and password
-  const validationError = validateForm(email, password);
-
-  if (validationError) {
-    return alert(validationError);
-  }
-
-  // Send a POST request to /sessions
-  send('POST', '/sessions', { email, password }).then((response) => {
-    if (response.ok) {
-      // Save session id to local storage
-      const sessionIdString = response.body.id;
-
-      localStorage.setItem('sessionId', sessionIdString);
-      sessionId = sessionIdString;
-
-      // Clear form
-      emailInput.value = '';
-      passwordInput.value = '';
-
-      // Close modal
-      closeModal('signInModal');
-
-      // Hide sign in button
-      document.getElementById('signInButton').style.display = 'none';
-      document.getElementById('signOutButton').style.display = 'block';
-
-      // Redirect to /home
-      window.location.href = '/home';
-    } else {
-      alert('Failed to sign in!');
-    }
-  });
-}
-
 function adminSignIn() {
   event.preventDefault();
 
@@ -116,25 +37,6 @@ function adminSignIn() {
   });
 }
 
-function signOut() {
-  // Send a DELETE request to /sessions
-  send('DELETE', '/sessions').then((response) => {
-    if (response.ok) {
-      // Clear local storage
-      clearStorageAndResetSessionInfo();
-
-      // Show sign in button
-      document.getElementById('signInButton').style.display = 'block';
-      document.getElementById('signOutButton').style.display = 'none';
-
-      // Redirect to /home
-      window.location.href = '/home';
-    } else {
-      alert('Failed to sign out!');
-    }
-  });
-}
-
 function submitPrice(vehicle) {
   const priceInput = document.getElementById(`price${vehicle.id}`);
   let price = priceInput.value;
@@ -156,6 +58,19 @@ function submitPrice(vehicle) {
   });
 }
 
+function changeBetweenDetailsAndStart() {
+  let details = document.getElementById('car_details');
+  let start = document.getElementById('additional_details');
+
+  if (details.style.display === 'none') {
+    details.style.display = 'block';
+    start.style.display = 'none';
+  } else {
+    details.style.display = 'none';
+    start.style.display = 'block';
+  }
+}
+
 function submitVehicleForm() {
   event.preventDefault();
 
@@ -163,57 +78,68 @@ function submitVehicleForm() {
   let make = document.getElementById('make').value.trim();
   let model = document.getElementById('model').value.trim();
   let vin = document.getElementById('vin').value.trim();
+  let accident = document.getElementById('accident').value.trim();
+  let issue = document.getElementById('issue').value.trim();
+  let clearTitle = document.getElementById('clear_title').value.trim().toLowerCase();
+  let odometer = document.getElementById('odometer').value.trim();
+  let zipCode = document.getElementById('zip_code').value.trim();
+  let emailAddress = document.getElementById('email_address').value.trim();
+  let phoneNumber = document.getElementById('phone_number').value.trim() ? document.getElementById('phone_number').value.trim() : null;
+
+  const vehicleInfo = {
+    year,
+    make,
+    model,
+    vin,
+    accident,
+    issue,
+    clearTitle,
+    odometer,
+  };
+
+  const user = {
+    zipCode,
+    emailAddress,
+    phoneNumber,
+  };
 
   // Validate vehicle form
-  const validationError = validateVehicleForm(year, make, model, vin);
+  const validationError = validateVehicleForm(vehicleInfo, user);
 
   if (validationError) {
     return alert(validationError);
   }
 
   // Send a POST request to /users
-  send('POST', '/vehicles', { year, make, model, vin }).then((response) => {
+  send('POST', '/vehicles', { vehicleInfo, user }).then((response) => {
     if (response.ok) {
-      alert('Vehicle information submitted!');
-
-      // Clear form
-      document.getElementById('year').value = '';
-      document.getElementById('make').value = '';
-      document.getElementById('model').value = '';
-      document.getElementById('vin').value = '';
+      window.location.href = '/home';
+      changeBetweenDetailsAndStart();
+      alert('Vehicle information submitted! Email will be sent as soon as possible!');
+      clearVehicleForm();
     } else {
       alert('Failed to submit vehicle information!');
     }
   });
 }
 
-// Modal
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-  modal.style.display = 'flex';
-}
-
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  modal.style.display = 'none';
-  document.getElementById('signUpEmail').value = '';
-  document.getElementById('signUpPassword').value = '';
-  document.getElementById('signInEmail').value = '';
-  document.getElementById('signInPassword').value = '';
+function clearVehicleForm() {
+  document.getElementById('year').value = '';
+  document.getElementById('make').value = '';
+  document.getElementById('model').value = '';
+  document.getElementById('vin').value = '';
+  document.getElementById('accident').value = '';
+  document.getElementById('issue').value = '';
+  document.getElementById('clear_title').value = '';
+  document.getElementById('odometer').value = '';
+  document.getElementById('zip_code').value = '';
+  document.getElementById('email_address').value = '';
+  document.getElementById('phone_number').value = '';
 }
 
 // On page load or refresh, check if there is a session id in local storage
 window.onload = function () {
-  const session = localStorage.getItem('sessionId');
   const adminSession = localStorage.getItem('adminSessionId');
-  if (session) {
-    sessionId = session;
-    document.getElementById('signInButton').style.display = 'none';
-    document.getElementById('signOutButton').style.display = 'block';
-  } else {
-    document.getElementById('signInButton').style.display = 'block';
-    document.getElementById('signOutButton').style.display = 'none';
-  }
 
   if (adminSession) {
     adminSessionId = adminSession;
@@ -238,19 +164,45 @@ function validateForm(email, password) {
   return null;
 }
 
-function validateVehicleForm(year, make, model, vin) {
-  if (!year.trim() || !make.trim() || !model.trim() || !vin.trim()) {
+function validateVehicleForm(vehicleInfo, user) {
+  const requiredFields = [
+    vehicleInfo.year,
+    vehicleInfo.make,
+    vehicleInfo.model,
+    vehicleInfo.vin,
+    vehicleInfo.accident,
+    vehicleInfo.issue,
+    vehicleInfo.clearTitle,
+    vehicleInfo.odometer,
+    user.zipCode,
+    user.emailAddress,
+    user.phoneNumber,
+  ];
+
+  if (requiredFields.includes('')) {
     return 'All fields are required';
   }
 
   let currentYear = new Date().getFullYear();
 
-  if (year < 1900 || year > currentYear) {
+  if (vehicleInfo.year < 1900 || vehicleInfo.year > currentYear) {
     return `Year must be between 1900 and ${currentYear}`;
   }
 
-  if (vin.length !== 17) {
+  if (vehicleInfo.vin.length !== 17) {
     return 'VIN must be 17 characters';
+  }
+
+  if (vehicleInfo.odometer < 0) {
+    return 'Odometer must be greater than 0';
+  }
+
+  if (vehicleInfo.clearTitle !== 'yes' && vehicleInfo.clearTitle !== 'no') {
+    return 'Clear title must be yes or no';
+  }
+
+  if (user.emailAddress.indexOf('@') === -1) {
+    return 'Email address must be valid';
   }
 
   return null;
@@ -291,7 +243,6 @@ function send(method, url, body) {
         alert('Error code ' + response.status + ':\n' + responseText);
       }
       if (response.status === 401) {
-        // Assuming you have a function named clearStorageAndResetSessionInfo
         clearStorageAndResetSessionInfo();
       }
       return { ok: false, status: response.status, body: responseObject || responseText };
@@ -301,10 +252,6 @@ function send(method, url, body) {
   const headers = {
     'Content-Type': 'application/json',
   };
-  // Assuming you have a variable named sessionId
-  if (sessionId) {
-    headers.Authorization = 'Bearer ' + sessionId;
-  }
 
   return fetch(url, {
     method: method,
@@ -321,8 +268,6 @@ function send(method, url, body) {
 }
 
 function clearStorageAndResetSessionInfo() {
-  localStorage.removeItem('sessionId');
   localStorage.removeItem('adminSessionId');
-  sessionId = null;
   adminSessionId = null;
 }

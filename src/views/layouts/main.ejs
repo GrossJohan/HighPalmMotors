@@ -27,52 +27,6 @@
     <%- body; %>
 
     <%- include('footer') %>
-
-    <!-- Sign Up Modal container -->
-    <div id="signUpModal" class="modal">
-        <!-- Modal content -->
-        <div class="form_box eight wide column">
-            <span class="close" onclick="closeModal('signUpModal')">CLOSE</span>
-            <h2 class='form_label'>Sign Up</h2>
-
-            <form class='signup_form'>
-                <label class='form_label' for='signUpEmail'>Email</label>
-                <br>
-                <input class='form_input' type='email' id='signUpEmail' required>
-                <br><br>
-                <label class='form_label' for='signUpPassword'>Password</label>
-                <br>
-                <input class='form_input' type='password' id='signUpPassword' required>
-                <br><br>
-                <input type='submit' value='Sign Up' onclick='signUp()'>
-            </form>
-        </div>
-    </div>
-
-    <!-- Sign In Modal container -->
-    <div id="signInModal" class="modal">
-        <!-- Modal content -->
-        <div class="form_box eight wide column">
-            <span class="close" onclick="closeModal('signInModal')">CLOSE</span>
-            <h2 class='form_label'>Sign In</h2>
-
-            <form class='signup_form'>
-                <label class='form_label' for='signInEmail'>Email</label>
-                <br>
-                <input class='form_input' type='email' id='signInEmail' required>
-                <br><br>
-                <label class='form_label' for='signInPassword'>Password</label>
-                <br>
-                <input class='form_input' type='password' id='signInPassword' required>
-                <br><br>
-                <input type='submit' value='Sign In' onclick='signIn()'>
-            </form>
-            <span>Don't have an account?</span>
-            <a class="item" id='signUpButton' onclick='closeModal("signInModal"); openModal("signUpModal")'>SIGN UP</a>
-            <br>
-        </div>
-    </div>
-
 </div>
 
 <script src="/public.js"></script>

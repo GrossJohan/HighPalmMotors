@@ -20,6 +20,6 @@
     "ts-node": "10.7.0"
   },
   "scripts": {
-    "start": "nodemon -e ts,js,json src/server.ts"
+    "start": "npm install && nodemon -e ts,js,json src/server.ts"
   }
 }

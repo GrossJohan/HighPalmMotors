@@ -19,6 +19,18 @@ export class Vehicle extends BaseEntity {
   @Column({ type: 'varchar', length: 50 })
   model: string;
 
+  @Column({ type: 'varchar', length: 50 })
+  accident: string;
+
+  @Column({ type: 'varchar', length: 50 })
+  issue: string;
+
+  @Column({ type: 'varchar', length: 50 })
+  clearTitle: string;
+
+  @Column({ type: 'bigint' })
+  odometer: bigint;
+
   @ManyToOne(() => User, (user) => user.vehicles)
   @JoinColumn({ name: 'userId' })
   user: User;

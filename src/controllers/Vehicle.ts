@@ -1,25 +1,36 @@
 import { dbCreateEntity, dbFindByFieldName } from '../services/dbQuerys';
 import { Vehicle } from '../models/Vehicle';
-import { authorizeRequest } from '../services/authorizeRequest';
+import { checkIfUserExists } from './User';
+import { sendEmailToAdmin } from './Email';
 
 interface CreateVehicleParams {
   vin: number;
   year: number;
   make: string;
   model: string;
+  accident: string;
+  issue: string;
+  clearTitle: string;
+  odometer: number;
+}
+
+interface CreateUserParams {
+  emailAddress: string;
+  zipCode: number;
+  phoneNumber: number;
 }
 
 export const createVehicle = async (req, res) => {
-  // Check if user is authorized
-  const authorized = await authorizeRequest(req, res);
-  if (authorized !== true) return authorized;
-
   try {
     // Get vehicle data from request body
-    const { vin, year, make, model } = req.body as CreateVehicleParams;
+    const { vin, year, make, model, accident, issue, clearTitle, odometer } = req.body.vehicleInfo as CreateVehicleParams;
+    const { emailAddress, zipCode, phoneNumber } = req.body.user as CreateUserParams;
 
-    // Check that all required parameters are present
-    if (!vin || !year || !make.trim() || !model.trim()) {
+    // Validation
+    const requiredFields = [vin, year, make, model, accident, issue, clearTitle, odometer, emailAddress, zipCode, phoneNumber];
+
+    // Validate required fields
+    if (requiredFields.includes('')) {
       return res.status(400).send('All fields are required!');
     }
 
@@ -41,14 +52,37 @@ export const createVehicle = async (req, res) => {
       return res.status(400).send('Vin already exists!');
     }
 
-    // Create vehicle
+    // Validate odometer
+    if (odometer < 0) {
+      return res.status(400).send('Odometer must be greater than 0!');
+    }
+
+    // Validate clear title
+    if (clearTitle !== 'yes' && clearTitle !== 'no') {
+      return res.status(400).send('Clear title must be Yes or No!');
+    }
+
+    // Validate email
+    if (!emailAddress.includes('@')) {
+      return res.status(400).send('Invalid email address!');
+    }
+
+    const user = await checkIfUserExists(emailAddress, zipCode, phoneNumber);
+
     const vehicle = await dbCreateEntity('Vehicle', {
       vin: vin,
       year: year,
       make: make.trim() ?? '',
       model: model.trim() ?? '',
-      user: req.user.id,
+      accident: accident.trim() ?? '',
+      issue: issue.trim() ?? '',
+      clearTitle: clearTitle.trim() ?? '',
+      odometer: odometer,
+      user: user.id,
     });
+
+    // Notify admin
+    await sendEmailToAdmin(req.body.vehicleInfo, req.body.user);
 
     return res.status(200).json({ data: vehicle });
   } catch (error) {

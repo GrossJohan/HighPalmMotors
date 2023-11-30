@@ -73,3 +73,34 @@ export const sendEmail = async (req, res) => {
     console.error('Error occurred:', error);
   }
 };
+
+export const sendEmailToAdmin = async (vehicle, user) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: {
+        name: 'High Palm Motors',
+        address: process.env.SENDER_EMAIL,
+      },
+      to: process.env.ADMIN_EMAIL,
+      subject: 'High Palm Motors - New vehicle added',
+      text: `A new vehicle has been added to the inventory. Below are the details:
+      Vehicle: ${vehicle.make} ${vehicle.model} ${vehicle.year}
+      User: ${user.emailAddress}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error occurred:', error);
+  }
+};

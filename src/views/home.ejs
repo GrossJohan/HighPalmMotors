@@ -4,8 +4,8 @@
     <div class="form_container row" id='start_here'>
         <div class="first_column eight wide column">
         </div>
-        <div class="form_box eight wide column">
-            <img class="start_img" src="/img/startHere.png">
+        <div class="form_box eight wide column" id='car_details'>
+            <img class="start_img" src="/img/startHere.png" alt='Start Here Picture'>
             <form class="horizontal-form">
                 <div class="form_row">
                     <label class="form_label" for="vin">VIN</label><br>
@@ -24,7 +24,43 @@
                     <input class="form_input" type="number" pattern="\d+" id="year" name="year" required>
                 </div>
             </form>
-            <input type="submit" value="CONTINUE" onclick='submitVehicleForm()'>
+            <input type="submit" value="CONTINUE" onclick='changeBetweenDetailsAndStart()'>
+        </div>
+
+        <div class="form_box eight wide column" id='additional_details'>
+            <form action='#' class="horizontal-form">
+                <div class="form_row">
+                    <label class='form_label' for='accident'>Has Your Car Ever Been in an Accident?</label><br>
+                    <input class='form_input' type='text' id='accident'>
+                </div>
+                <div class="form_row">
+                    <label class='form_label' for='issue'>Does Your Car Have Cosmetic or Mechanical Issue?</label><br>
+                    <input class='form_input' type='text' id='issue'>
+                </div>
+                <div class="form_row">
+                    <label class='form_label' for='clear_title'>Do You Have a Clear Title?</label><br>
+                    <span class='form_label'>Type "No" if your Vehicle is leased or Financed</span><br>
+                    <input class='form_input' type='text' id='clear_title'>
+                </div>
+                <div class="form_row">
+                    <label class='form_label' for='odometer'>What Does the Odometer Read?</label><br>
+                    <input class='form_input' type='number' id='odometer'>
+                </div>
+                <div class="form_row">
+                    <label class='form_label' for='zip_code'>ZIP Code</label><br>
+                    <input class='form_input' type='number' id='zip_code'>
+                </div>
+                <div class="form_row">
+                    <label class='form_label' for='email_address'>Email Address</label><br>
+                    <input class='form_input' type='email' id='email_address'>
+                </div>
+                <div class="form_row">
+                    <label class='form_label' for='phone_number'>Phone Number (Optional)</label><br>
+                    <input class='form_input' type='number' id='phone_number'>
+                </div>
+            </form>
+            <input type="submit" value="BACK" onclick='changeBetweenDetailsAndStart()'>
+            <input type="submit" value="SEND" onclick='submitVehicleForm()'>
         </div>
     </div>
 </div>
