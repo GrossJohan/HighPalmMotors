@@ -12,10 +12,6 @@ https://www.pivotaltracker.com/n/projects/2682626
 cp .env.example .env
 ```
 
-```
-npm install
-```
-
 ### Running the app
 
 ```
@@ -40,3 +36,5 @@ npm start
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [uuid](https://www.npmjs.com/package/uuid)
 - [nodemailer](https://www.npmjs.com/package/nodemailer)
+- [@gund/time-slots](https://www.npmjs.com/package/@gund/time-slots)
+- [date-fns](https://www.npmjs.com/package/date-fns)

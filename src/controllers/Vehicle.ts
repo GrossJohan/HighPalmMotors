@@ -81,8 +81,13 @@ export const createVehicle = async (req, res) => {
       user: user.id,
     });
 
+    const data = {
+      vehicle: req.body.vehicleInfo,
+      user: req.body.user,
+    };
+
     // Notify admin
-    await sendEmailToAdmin(req.body.vehicleInfo, req.body.user);
+    await sendEmailToAdmin(data, 'newVehicle');
 
     return res.status(200).json({ data: vehicle });
   } catch (error) {

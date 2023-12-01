@@ -74,7 +74,7 @@ export const sendEmail = async (req, res) => {
   }
 };
 
-export const sendEmailToAdmin = async (vehicle, user) => {
+export const sendEmailToAdmin = async (data, type) => {
   try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -87,19 +87,31 @@ export const sendEmailToAdmin = async (vehicle, user) => {
       },
     });
 
-    const mailOptions = {
-      from: {
-        name: 'High Palm Motors',
-        address: process.env.SENDER_EMAIL,
-      },
-      to: process.env.ADMIN_EMAIL,
-      subject: 'High Palm Motors - New vehicle added',
-      text: `A new vehicle has been added to the inventory. Below are the details:
-      Vehicle: ${vehicle.make} ${vehicle.model} ${vehicle.year}
-      User: ${user.emailAddress}`,
-    };
-
-    await transporter.sendMail(mailOptions);
+    if (type === 'newVehicle') {
+      const mailOptions = {
+        from: {
+          name: 'High Palm Motors',
+          address: process.env.SENDER_EMAIL,
+        },
+        to: process.env.ADMIN_EMAIL,
+        subject: 'High Palm Motors - New vehicle added',
+        text: `A new vehicle has been added to the inventory. Below are the details:
+        Vehicle: ${data.vehicle.vehicle.make} ${data.vehicle.vehicle.model} ${data.vehicle.vehicle.year}
+        User: ${data.user.user.emailAddress}`,
+      };
+      await transporter.sendMail(mailOptions);
+    } else if (type === 'newAppointment') {
+      const mailOptions = {
+        from: {
+          name: 'High Palm Motors',
+          address: process.env.SENDER_EMAIL,
+        },
+        to: process.env.ADMIN_EMAIL,
+        subject: 'High Palm Motors - New appointment',
+        text: `A new appointment has been booked. Visit http://localhost:${process.env.PORT}/admin/bookings to view the appointments.`,
+      };
+      await transporter.sendMail(mailOptions);
+    }
   } catch (error) {
     console.error('Error occurred:', error);
   }

@@ -1,7 +1,9 @@
 {
   "name": "high_palm_motors",
   "dependencies": {
+    "@gund/time-slots": "^1.0.3",
     "bcrypt": "^5.1.1",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",

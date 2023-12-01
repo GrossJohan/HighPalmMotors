@@ -6,6 +6,8 @@ import pageRouter from './routes/Page';
 import vehicleRouter from './routes/Vehicle';
 import adminRouter from './routes/Admin';
 import emailRouter from './routes/Email';
+import timeslotRouter from './routes/Timeslot';
+import appointmentRouter from './routes/Appointment';
 
 const app = express();
 
@@ -25,5 +27,7 @@ app.use('/', pageRouter);
 app.use('/vehicles', vehicleRouter);
 app.use('/admin', adminRouter);
 app.use('/email', emailRouter);
+app.use('/api/timeslots', timeslotRouter);
+app.use('/api/appointments', appointmentRouter);
 
 export default app;

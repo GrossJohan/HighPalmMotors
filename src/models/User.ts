@@ -25,12 +25,12 @@ export class User extends BaseEntity {
   @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
   vehicles: Vehicle[];
 
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
+
   @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-
-  @OneToMany(() => Offer, (offer) => offer.user)
-  offers: Offer[];
 }

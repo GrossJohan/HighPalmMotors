@@ -35,13 +35,13 @@ export class Vehicle extends BaseEntity {
   @JoinColumn({ name: 'userId' })
   user: User;
 
+  @ManyToOne(() => Offer, (offer) => offer.vehicle)
+  @JoinColumn({ name: 'offerId' })
+  offer: Offer;
+
   @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-
-  @ManyToOne(() => Offer, (offer) => offer.vehicle)
-  @JoinColumn({ name: 'offerId' })
-  offer: Offer;
 }

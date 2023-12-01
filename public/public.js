@@ -271,3 +271,90 @@ function clearStorageAndResetSessionInfo() {
   localStorage.removeItem('adminSessionId');
   adminSessionId = null;
 }
+
+async function getTimeSlotsByDate() {
+  const inputDateValue = document.getElementById('dateInput').value;
+  const inputDate = new Date(inputDateValue);
+  const formattedDate = inputDate.toISOString().split('T')[0];
+
+  await send('GET', '/api/timeSlots/' + formattedDate).then((response) => {
+    if (response.ok) {
+      let timeSlotsContainer = document.getElementById('timeSlotsContainer');
+      timeSlotsContainer.innerHTML = '';
+      response.body.forEach((timeSlot) => {
+        let timeSlotDiv = document.createElement('div');
+        timeSlotDiv.classList.add('timeSlot');
+        timeSlotDiv.innerHTML = `<div>${timeSlot.date}</div><div>${timeSlot.timeRange.from}-${timeSlot.timeRange.to}</div>`;
+        timeSlotsContainer.appendChild(timeSlotDiv);
+      });
+    } else {
+      alert('Failed to get time slots!');
+    }
+  });
+}
+
+function bookAppointment() {
+  const selectedSlot = document.querySelector('.selected');
+  let timeRange;
+  let date;
+
+  // Get full path with query string
+  const url = window.location.href;
+
+  // Extract query string id
+  const offerId = url.split('=')[1];
+
+  if (!offerId) {
+    alert('Book appointment by clicking on a link that was sent to you via email!');
+    window.location.href = '/home';
+    return;
+  }
+
+  if (selectedSlot) {
+    date = selectedSlot.querySelector('div:first-child').innerText;
+    timeRange = selectedSlot.querySelector('div:nth-child(2)').innerText;
+  } else {
+    alert('Please select a time slot!');
+    return;
+  }
+
+  if (confirm(`Book appointment for ${date} at ${timeRange}?`)) {
+    send('POST', '/api/appointments', { date, timeRange, offerId }).then((response) => {
+      if (response.ok) {
+        alert(`Appointment booked for ${date} at ${timeRange}!`);
+        deleteTimeslot(date, timeRange, selectedSlot);
+        window.location.href = '/home';
+      } else {
+        alert('Offer already booked!');
+        window.location.href = '/home';
+      }
+    });
+  }
+}
+
+function deleteTimeslot(date, timeRange, selectedSlot) {
+  send('DELETE', `/api/timeslots/${date}/${timeRange}`).then((response) => {
+    if (response.ok) {
+      selectedSlot.remove();
+    } else {
+      alert('Failed to delete time slot from server!');
+    }
+  });
+}
+
+// Event listeners
+let slotContainer = document.getElementById('timeSlotsContainer');
+
+slotContainer.addEventListener('click', function (e) {
+  let slot = document.querySelectorAll('.timeSlot');
+
+  if (e.target.classList.contains('timeSlot')) {
+    // Remove 'selected' class from all time slots
+    slot.forEach(function (el) {
+      el.classList.remove('selected');
+    });
+
+    // Add 'selected' class to the clicked time slot
+    e.target.classList.add('selected');
+  }
+});

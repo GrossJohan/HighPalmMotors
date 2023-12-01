@@ -1,1 +1,11 @@
-<h1>Book Appointment</h1>
+<div id='calendarDiv'>
+    <label>
+        <input type="date" id="dateInput" oninput='getTimeSlotsByDate()'>
+    </label>
+</div>
+
+<div id='timeSlotsContainer'></div>
+
+<div id='submitDiv'>
+    <input type='submit' value='BOOK' onclick='bookAppointment()'>
+</div>
