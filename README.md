@@ -18,6 +18,11 @@ cp .env.example .env
 npm start
 ```
 
+### Admin user:
+email: admin@gmail.com
+
+password: Passw0rd
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)

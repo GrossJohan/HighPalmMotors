@@ -96,8 +96,8 @@ export const sendEmailToAdmin = async (data, type) => {
         to: process.env.ADMIN_EMAIL,
         subject: 'High Palm Motors - New vehicle added',
         text: `A new vehicle has been added to the inventory. Below are the details:
-        Vehicle: ${data.vehicle.vehicle.make} ${data.vehicle.vehicle.model} ${data.vehicle.vehicle.year}
-        User: ${data.user.user.emailAddress}`,
+        Vehicle: ${data.vehicle.make} ${data.vehicle.model} ${data.vehicle.year}
+        User: ${data.user.emailAddress}`,
       };
       await transporter.sendMail(mailOptions);
     } else if (type === 'newAppointment') {

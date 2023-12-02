@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get('/', servePage);
 router.get('/:page', servePage);
+router.get('/:page/:subpage', servePage);
 
 export default router;
